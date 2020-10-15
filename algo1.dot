@@ -1,0 +1,18 @@
+digraph system {
+_768[label="", shape=none ];
+_768->768;
+1283 [label= "1283 [counter.un, mutex.free, w.used]"];
+513 [label= "513 [mutex.used, w.free]"];
+517 [label= "517 [mutex.used, w.free]"];
+774 [label= "774 [mutex.free, w.free]"];
+1026 [label= "1026 [counter.un, mutex.used, w.used]"];
+1028 [label= "1028 [counter.un, mutex.used, r1.SectionCritique, w.used]"];
+768 [label= "768 [mutex.free, w.free]"];
+1283->1283 [label= "r1_lecture"];
+1283->1028 [label= "r1_verouillerMutex"];
+517->774 [label= "r1_libererMutex"];
+513->1026 [label= "r1_verouillerW"];
+1026->1283 [label= "r1_libererMutex"];
+1028->517 [label= "r1_countm1libererW"];
+768->513 [label= "r1_verouillerMutex"];
+}
