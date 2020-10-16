@@ -1,16 +1,18 @@
 Reader = [lecture] {
-    etat = 5;
-    init = 1;
+    etat = 7;
+    init = 0;
 
-    1 = lecture;
+    3 = lecture;
 
-    0 -> 1 [countp1VerouillerW];
-    0 -> 1 [countp1];
-    1 -> 1 [lecture];
-    1 -> 2 [verouillerMutex];
-    2 -> 3 [countm1LibererW];
-    2 -> 3 [countm1];
-    3 -> 4 [libererMutex];
+    0 -> 1 [verouillerMutex];
+    1 -> 2 [countp1VerouillerW];
+    1 -> 2 [countp1];
+    2 -> 3 [libererMutex];
+    3 -> 3 [lecture];
+    3 -> 4 [verouillerMutex];
+    4 -> 5 [countm1LibererW];
+    4 -> 5 [countm1];
+    5 -> 6 [libererMutex];
 };;
 
 /* Compteur pour 2 readers*/
@@ -73,10 +75,11 @@ ProduitSync = <Reader r1, Reader r2, Writer writer, Semaphore mutex, Semaphore w
     <_,_, verouiller, _, p, _> -> w1_verouiller;
     <_,_, ecriture, _, _, _> -> w1_ecriture;
     <_,_, liberer, _, v, _> -> w1_liberer;
+
 };;
 
 bug = ProduitSync -> writer.ecriture &&  (r1.lecture || r2.lecture) ;; 
 doubleLecture = ProduitSync -> r1.lecture && r2.lecture ;; 
 ecritureseul = ProduitSync -> writer.ecriture ;;
 
-todot algo1_v1.dot ProduitSync;;
+todot Algo1/algo1.dot ProduitSync;;
