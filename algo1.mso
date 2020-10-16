@@ -53,10 +53,8 @@ Semaphore = [free, used] {
 };;
 
 ProduitSync = <Reader r1, Reader r2, Writer writer, Semaphore mutex, Semaphore w, RCounter counter> {
-    <verouillerMutex, _, _, p, _, _> -> r1_verouillerMutex;
     <countp1VerouillerW, _, _, _, p, plus1v1> -> r1_verouillerW;
     <countp1, _, _, _, _, plus1> -> r1_countp1;
-    <libererMutex, _, _, v, _, _> -> r1_libererMutex;
     <lecture, _, _, _, _, _> -> r1_lecture;
     <verouillerMutex, _, _, p, _, _> -> r1_verouillerMutex;
     <countm1LibererW, _, _, _, v, moins1v0> -> r1_countm1libererW;
@@ -65,10 +63,8 @@ ProduitSync = <Reader r1, Reader r2, Writer writer, Semaphore mutex, Semaphore w
 
 
 
-    <_,verouillerMutex, _, p, _, _> -> r2_verouillerMutex;
     <_,countp1VerouillerW, _, _, p, plus1v1> -> r2_verouillerW;
     <_,countp1, _, _, _, plus1> -> r2_countp1;
-    <_,libererMutex, _, v, _, _> -> r2_libererMutex;
     <_,lecture, _, _, _, _> -> r2_lecture;
     <_,verouillerMutex, _, p, _, _> -> r2_verouillerMutex;
     <_,countm1LibererW, _, _, v, moins1v0> -> r2_countm1libererW;
