@@ -59,8 +59,6 @@ ProduitSync = <Reader r1, Reader r2, Writer writer, Semaphore mutex, Semaphore w
     <countm1, _, _, _, _, moins1> -> r1_countm1;
     <libererMutex, _, _, v, _, _> -> r1_libererMutex;
 
-
-
     <_,countp1VerouillerW, _, _, p, plus1v1> -> r2_verouillerW;
     <_,countp1, _, _, _, plus1> -> r2_countp1;
     <_,lecture, _, _, _, _> -> r2_lecture;
@@ -69,14 +67,13 @@ ProduitSync = <Reader r1, Reader r2, Writer writer, Semaphore mutex, Semaphore w
     <_,countm1,  _, _, _, moins1> -> r2_countm1;
     <_,libererMutex,  _, v, _, _> -> r2_libererMutex;
 
-    
     <_,_, verouiller, _, p, _> -> w1_verouiller;
     <_,_, ecriture, _, _, _> -> w1_ecriture;
     <_,_, liberer, _, v, _> -> w1_liberer;
 };;
 
-bug = ProduitSync -> writer.ecriture &&  (r1.lecture || r2.lecture) ;; 
-doubleLecture = ProduitSync -> r1.lecture && r2.lecture ;; 
-ecritureseul = ProduitSync -> writer.ecriture ;;
+bug = ProduitSync -> writer.ecriture &&  (r1.lecture || r2.lecture);; 
+doubleLecture = ProduitSync -> r1.lecture && r2.lecture;; 
+ecritureseul = ProduitSync -> writer.ecriture;;
 
 todot Algo1_v1/algo1_v1.dot ProduitSync;;
