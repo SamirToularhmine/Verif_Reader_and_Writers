@@ -46,8 +46,8 @@ RCounter = [zero, un] {
     etat = 3;
     init = 0;
     
+    0 = zero;
     1 = un;
-    2 = zero;
 
     0 -> 0 [v0];
     0 -> 1 [plus1v1];
