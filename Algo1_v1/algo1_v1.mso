@@ -56,34 +56,42 @@ Semaphore = [free, used] {
     0 -> 1 [v];
 };;
 
-ProduitSync = <Reader r1, Reader r2, Writer writer, Semaphore mutex, Semaphore w, RCounter counter> {
-    <countp1, _, _, _, _, plus1> -> r1_countp1;
-    <countv1VerouillerW, _, _, _, p, v1> -> r1_countv1VerouillerW;
-    <countDiff1, _, _, _, _, diff1> -> r1_countDiff1;
-    <lecture, _, _, _, _, _> -> r1_lecture;
-    <verouillerMutex, _, _, p, _, _> -> r1_verouillerMutex;
-    <countm1, _, _, _, _, moins1> -> r1_countm1;
-    <countv0LibererW, _, _, _, v, v0> -> r1_countv0LibererW;
-    <countDiff0, _, _, _, _, diff0> -> r1_countDiff0;
-    <libererMutex, _, _, v, _, _> -> r1_libererMutex;
+ProduitSync = <Reader r1, Reader r2, Writer w1, Writer w2, Semaphore mutex, Semaphore w, RCounter counter> {
+    <countp1, _, _, _, _, _, plus1> -> r1_countp1;
+    <countv1VerouillerW, _, _, _, _, p, v1> -> r1_countv1VerouillerW;
+    <countDiff1, _, _, _, _, _, diff1> -> r1_countDiff1;
+    <lecture, _, _, _, _, _, _> -> r1_lecture;
 
-    <_, countp1, _, _, _, plus1> -> r2_countp1;
-    <_, countv1VerouillerW, _, _, p, v1> -> r2_countv1VerouillerW;
-    <_, countDiff1, _, _, _, diff1> -> r2_countDiff1;
-    <_, lecture, _, _, _, _> -> r2_lecture;
-    <_, verouillerMutex, _, p, _, _> -> r2_verouillerMutex;
-    <_, countm1, _, _, _, moins1> -> r2_countm1;
-    <_, countv0LibererW, _, _, v, v0> -> r2_countv0LibererW;
-    <_, countDiff0, _, _, _, diff0> -> r2_countDiff0;
-    <_, libererMutex, _, v, _, _> -> r2_libererMutex;
+    <verouillerMutex, _, _, _, p, _, _> -> r1_verouillerMutex;
+    <countm1, _, _, _, _, _, moins1> -> r1_countm1;
+    <countv0LibererW, _, _, _, _, v, v0> -> r1_countv0LibererW;
+    
+    <countDiff0, _, _, _, _, _, diff0> -> r1_countDiff0;
+    <libererMutex, _, _, _, v, _, _> -> r1_libererMutex;
+    
+    <_, countp1, _, _, _, _, plus1> -> r2_countp1;
+    <_, countv1VerouillerW, _, _, _, p, v1> -> r2_countv1VerouillerW;
+    <_, countDiff1, _, _, _, _, diff1> -> r2_countDiff1;
+    <_, lecture, _, _, _, _, _> -> r2_lecture;
+    <_, verouillerMutex, _, _, p, _, _> -> r2_verouillerMutex;
+    <_, countm1, _, _, _, _, moins1> -> r2_countm1;
+    <_, countv0LibererW, _, _, _, v, v0> -> r2_countv0LibererW;
+    <_, countDiff0, _, _, _, _, diff0> -> r2_countDiff0;
+    <_, libererMutex, _, _, v, _, _> -> r2_libererMutex;
 
-    <_,_, verouillerW, _, p, _> -> w1_verouiller;
-    <_,_, ecriture, _, _, _> -> w1_ecriture;
-    <_,_, libererW, _, v, _> -> w1_liberer;
+
+    <_, _, verouillerW, _, _, p, _> -> w1_verouiller;
+    <_, _, ecriture, _, _, _, _> -> w1_ecriture;
+    <_, _, libererW, _, _, v, _> -> w1_liberer;
+
+    <_, _, _, verouillerW, _, p, _> -> w2_verouiller;
+    <_, _, _, ecriture, _, _, _> -> w2_ecriture;
+    <_, _, _, libererW, _, v, _> -> w2_liberer;
 };;
 
-bug = ProduitSync -> writer.ecriture &&  (r1.lecture || r2.lecture);; 
-doubleLecture = ProduitSync -> r1.lecture && r2.lecture;; 
-ecritureseul = ProduitSync -> writer.ecriture;;
 
-todot Algo1_v1/algo1_v1.dot bug;;
+bug = ProduitSync -> w1.ecriture &&  (r1.lecture || r2.lecture);; 
+doubleLecture = ProduitSync -> r1.lecture && r2.lecture;; 
+ecritureseul = ProduitSync -> w1.ecriture;;
+
+todot Algo1_v1/algo1_v1.dot ProduitSync;;
