@@ -1,9 +1,9 @@
-Reader = [lecture] {
+Reader = [lecture, fin] {
     etat = 8;
     init = 0;
 
     2 = lecture;
-
+    7 = fin;
     0 -> 1 [countv0VerouillerW];
     0 -> 1 [countDiff0];
     1 -> 2 [countp1];
@@ -33,12 +33,12 @@ RCounter = [zero, un] {
     1 -> 0 [moins1];
 };;
 
-Writer = [ecriture] {
+Writer = [ecriture, fin] {
     etat = 4;
     init = 0;
 
     1 = ecriture;
-
+    3 = fin;
     0 -> 1 [verouillerW];
     1 -> 1 [ecriture];
     1 -> 2 [ecriture];
@@ -92,5 +92,10 @@ ProduitSync = <Reader r1, Reader r2, Writer w1, Writer w2, Semaphore mutex, Sema
 bug = ProduitSync -> w1.ecriture &&  (r1.lecture || r2.lecture);; 
 doubleLecture = ProduitSync -> r1.lecture && r2.lecture;; 
 ecritureseul = ProduitSync -> w1.ecriture;;
+
+/* Proposition CTL */
+ProduitSync += surete <- AF(w1.fin && w2.fin && r1.fin && r2.fin);;
+ProduitSync += doubleEcriture <- !AG(w1.ecriture && w2.ecriture) ;; /* pas 2 écrivains en même temps */
+ProduitSync += ecritureLecture <- !AG(((w1.ecriture || w2.ecriture) && (r1.lecture || r2.lecture)));; /* pas d'écriture et de lecture en même temps */
 
 todot Algo1_v2/algo1_v2.dot ProduitSync;;

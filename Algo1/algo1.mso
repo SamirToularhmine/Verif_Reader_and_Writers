@@ -1,8 +1,9 @@
-Reader = [lecture] {
+Reader = [lecture, fin] {
     etat = 10;
     init = 0;
 
     4 = lecture;
+    9 = fin;
 
     0 -> 1 [verouillerMutex];
     1 -> 2 [countp1];
@@ -22,7 +23,6 @@ Reader = [lecture] {
 RCounter = [zero, un] {
     etat = 3;
     init = 0;
-    
     1 = un;
     0 = zero;
 
@@ -36,12 +36,11 @@ RCounter = [zero, un] {
 
 };;
 
-Writer = [ecriture] {
+Writer = [ecriture, fin] {
     etat = 4;
     init = 0;
-
     1 = ecriture;
-
+    3 = fin;
     0 -> 1 [verouillerW];
     1 -> 1 [ecriture];
     1 -> 2 [ecriture];
@@ -98,12 +97,9 @@ bug = ProduitSync -> w1.ecriture &&  (r1.lecture || r2.lecture);;
 doubleLecture = ProduitSync -> r1.lecture && r2.lecture;; 
 ecritureseul = ProduitSync -> w1.ecriture;;
 
-/* proposion CTL
-ProduitSync += prop1 <- !AG((w1.ecriture && w2.ecriture)) ;;  pas 2 écrivains en même temps 
-ProduitSync += prop2 <- !AG(((w1.ecriture || w2.ecriture) && (r1.lecture || r2.lecture))) ;;  pas d'écriture et de lecture en même temps 
-
-reduit = ProduitSync | prop1 && prop2 ;;
-*/
-
+/* Proposition CTL */
+ProduitSync += surete <- AF(w1.fin && w2.fin && r1.fin && r2.fin);;
+ProduitSync += doubleEcriture <- !AG(w1.ecriture && w2.ecriture) ;; /* pas 2 écrivains en même temps */
+ProduitSync += ecritureLecture <- !AG(((w1.ecriture || w2.ecriture) && (r1.lecture || r2.lecture)));; /* pas d'écriture et de lecture en même temps */
 
 todot Algo1/algo1.dot ProduitSync;;

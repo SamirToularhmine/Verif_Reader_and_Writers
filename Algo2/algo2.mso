@@ -124,4 +124,10 @@ bug = ProduitSync -> writer.ecriture &&  (r1.lecture || r2.lecture);;
 doubleLecture = ProduitSync -> r1.lecture && r2.lecture;; 
 ecritureseul = ProduitSync -> writer.ecriture;;
 
+/* Proposition CTL */
+ProduitSync += surete <- AF(w1.fin && w2.fin && r1.fin && r2.fin);;
+ProduitSync += doubleEcriture <- !AG(w1.ecriture && w2.ecriture) ;; /* pas 2 écrivains en même temps */
+ProduitSync += ecritureLecture <- !AG(((w1.ecriture || w2.ecriture) && (r1.lecture || r2.lecture)));; /* pas d'écriture et de lecture en même temps */
+
+
 todot Algo2/algo2.dot bug;;
