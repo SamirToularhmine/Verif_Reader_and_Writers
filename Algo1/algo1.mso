@@ -93,9 +93,8 @@ ProduitSync = <Reader r1, Reader r2, Writer w1, Writer w2, Semaphore mutex, Sema
 } ;;
 
 
-bug = ProduitSync -> w1.ecriture &&  (r1.lecture || r2.lecture);; 
-doubleLecture = ProduitSync -> r1.lecture && r2.lecture;; 
-ecritureseul = ProduitSync -> w1.ecriture;;
+ecritureLecture = ProduitSync -> ((w1.ecriture || w2.ecriture) && (r1.lecture || r2.lecture)) ;; 
+doubleEcriture = ProduitSync -> w1.ecriture && w2.ecriture;;
 
 /* Proposition CTL */
 ProduitSync += surete <- AF(w1.fin && w2.fin && r1.fin && r2.fin);;

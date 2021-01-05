@@ -71,7 +71,9 @@ Semaphore = [free, used] {
     0 -> 1 [v];
 };;
 
-ProduitSync = <Reader r1, Reader r2, Writer writer, Writer writer2, Semaphore mutex1, Semaphore mutex2, Semaphore mutex3, Semaphore r, Semaphore w, Counter readcount, Counter writecount> {
+
+
+ProduitSync = <Reader r1, Reader r2, Writer w1, Writer w2, Semaphore mutex1, Semaphore mutex2, Semaphore mutex3, Semaphore r, Semaphore w, Counter readcount, Counter writecount> {
     <verouillerMutex3, _, _, _, _, _, p, _, _, _, _> -> r1_verouillerMutex3;
     <verouillerR, _, _, _, _, _, _, p, _, _, _> -> r1_verouillerR;
     <verouillerMutex1, _, _, _, p, _, _, _, _, _, _> -> r1_verouillerMutex1;
@@ -134,14 +136,14 @@ ProduitSync = <Reader r1, Reader r2, Writer writer, Writer writer2, Semaphore mu
     /* <_, _, _, libererMutex2, _, v, _, _, _, _, _> -> w2_libererMutex2; */
 };;
 
-bug = ProduitSync -> writer.ecriture &&  (r1.lecture || r2.lecture);; 
-doubleLecture = ProduitSync -> r1.lecture && r2.lecture;; 
-doubleEcriture = ProduitSync -> writer.ecriture && writer2.ecriture;;
+ecritureLecture = ProduitSync -> ((w1.ecriture || w2.ecriture) && (r1.lecture || r2.lecture)) ;; 
+doubleEcriture = ProduitSync -> w1.ecriture && w2.ecriture;;
 
 /* Proposition CTL */
-/*ProduitSync += surete <- AF(writer.fin && r1.fin && r2.fin);;*/
-/*ProduitSync += doubleEcriture <- !AG(writer.ecriture && writer.ecriture) ;; */ /* pas 2 écrivains en même temps */
-/* ProduitSync += ecritureLecture <- !AG(((writer.ecriture || writer.ecriture) && (r1.lecture || r2.lecture)));;*/ /* pas d'écriture et de lecture en même temps */
+ProduitSync += surete <- AF(w1.fin && w2.fin && r1.fin && r2.fin);;
+ProduitSync += doubleEcriture <- !AG(w1.ecriture && w2.ecriture) ;; /* pas 2 écrivains en même temps */
+ProduitSync += ecritureLecture <- !AG(((w1.ecriture || w2.ecriture) && (r1.lecture || r2.lecture)));; /* pas d'écriture et de lecture en même temps */
+
 
 
 todot Algo2/algo2.dot ProduitSync;;
